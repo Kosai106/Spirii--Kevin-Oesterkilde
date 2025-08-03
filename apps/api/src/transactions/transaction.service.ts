@@ -10,6 +10,7 @@ import { UpdateTransactionDto } from '@repo/api/transactions/dto/update-transact
 
 // TODO: A lot of these actions should be internally wrapped in try/catch blocks
 //       I haven't done so here because we're not interfacing with an actual database
+
 @Injectable()
 export class TransactionsService {
   private readonly _transactions: Transaction[] = mockData;
@@ -26,8 +27,47 @@ export class TransactionsService {
     return newTransaction;
   }
 
-  findAll() {
-    return this._transactions;
+  // Everything is typed as strings here because of how query params work
+  // They could technically also be arrays but let's not worry about that now
+  findAll(page?: string, limit?: string, startDate?: string, endDate?: string) {
+    const itemsPerPage = parseInt(limit ?? '10', 10);
+    const currentPage = parseInt(page ?? '1', 10);
+    let filteredTransactions = this._transactions;
+
+    if (startDate || endDate) {
+      filteredTransactions = filteredTransactions.filter((transaction) => {
+        const transactionDate = new Date(transaction.createdAt);
+
+        if (startDate && endDate) {
+          const start = new Date(startDate);
+          const end = new Date(endDate);
+          return transactionDate >= start && transactionDate <= end;
+        } else if (startDate) {
+          const start = new Date(startDate);
+          return transactionDate >= start;
+        } else if (endDate) {
+          const end = new Date(endDate);
+          return transactionDate <= end;
+        }
+
+        return true;
+      });
+    }
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedItems = filteredTransactions.slice(startIndex, endIndex);
+
+    return {
+      items: paginatedItems,
+      meta: {
+        totalItems: filteredTransactions.length,
+        itemCount: paginatedItems.length,
+        itemsPerPage,
+        totalPages: Math.ceil(filteredTransactions.length / itemsPerPage),
+        currentPage: currentPage,
+      },
+    };
   }
 
   findOne(id: string) {

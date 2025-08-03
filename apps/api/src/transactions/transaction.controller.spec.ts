@@ -35,31 +35,24 @@ describe('TransactionController', () => {
 
   describe('findAll', () => {
     it('should find all transactions', () => {
-      expect(transactionController.findAll()).toEqual(
-        expect.arrayContaining([
-          {
+      expect(transactionController.findAll()).toEqual({
+        items: expect.arrayContaining([
+          expect.objectContaining({
             id: expect.any(String),
             userId: '074092',
-            createdAt: '2023-03-16T12:33:11.000Z',
-            type: 'payout',
-            amount: 30,
-          },
-          {
-            id: expect.any(String),
-            userId: '074092',
-            createdAt: '2023-03-12T12:33:11.000Z',
-            type: 'spent',
-            amount: 12,
-          },
-          {
-            id: expect.any(String),
-            userId: '074092',
-            createdAt: '2023-03-15T12:33:11.000Z',
-            type: 'earned',
-            amount: 1.2,
-          },
+            createdAt: expect.any(String),
+            type: expect.any(String),
+            amount: expect.any(Number),
+          }),
         ]),
-      );
+        meta: {
+          totalItems: 53,
+          itemCount: 10,
+          itemsPerPage: 10,
+          totalPages: 6,
+          currentPage: 1,
+        },
+      });
     });
   });
 
@@ -101,7 +94,7 @@ describe('TransactionController', () => {
         }),
       );
 
-      expect(transactionController.findAll()).toHaveLength(54);
+      expect(transactionController.findAll().meta.totalItems).toEqual(54);
     });
   });
 
@@ -137,13 +130,13 @@ describe('TransactionController', () => {
   describe('remove', () => {
     it('should remove a transaction', () => {
       const transactionId = '41bbdf81-735c-4aea-beb3-3e5fasfsdfef';
-      expect(transactionController.findAll()).toHaveLength(54);
+      expect(transactionController.findAll().meta.totalItems).toEqual(54);
 
       expect(transactionController.remove(transactionId)).toEqual(
         'Successfully removed transaction',
       );
 
-      expect(transactionController.findAll()).toHaveLength(53);
+      expect(transactionController.findAll().meta.totalItems).toEqual(53);
       expect(() => transactionController.findOne(transactionId)).toThrowError(
         'No transaction found',
       );

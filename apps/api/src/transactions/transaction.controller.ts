@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { TransactionsService } from './transaction.service';
 
@@ -16,19 +17,24 @@ import { UpdateTransactionDto } from '@repo/api/transactions/dto/update-transact
 export class TransactionsController {
   constructor(private readonly transactionService: TransactionsService) {}
 
-  @Post()
-  create(@Body() createTransactionDto: CreateTransactionDto) {
-    return this.transactionService.create(createTransactionDto);
-  }
-
   @Get()
-  findAll() {
-    return this.transactionService.findAll();
+  findAll(
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+    @Query('startDate') startDate?: string,
+    @Query('endDate') endDate?: string,
+  ) {
+    return this.transactionService.findAll(page, limit, startDate, endDate);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.transactionService.findOne(id);
+  }
+
+  @Post()
+  create(@Body() createTransactionDto: CreateTransactionDto) {
+    return this.transactionService.create(createTransactionDto);
   }
 
   @Patch(':id')
