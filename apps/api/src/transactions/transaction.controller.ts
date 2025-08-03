@@ -32,6 +32,16 @@ export class TransactionsController {
     return this.transactionsService.findOne(id);
   }
 
+  @Get('userId')
+  findByUserId(@Param('userId') userId: string) {
+    return this.transactionsService.findByUserId(userId);
+  }
+
+  @Get('type')
+  findByType(@Param('type') type: 'payout' | 'spent' | 'earned') {
+    return this.transactionsService.findByType(type);
+  }
+
   @Post()
   create(@Body() createTransactionDto: CreateTransactionDto) {
     return this.transactionsService.create(createTransactionDto);
