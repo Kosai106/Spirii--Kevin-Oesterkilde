@@ -9,4 +9,9 @@ export class AggregationsController {
   getUserAggregation(@Param('userId') userId: string) {
     return this.aggregationsService.getUserAggregation(userId);
   }
+
+  @Get('payouts/pending')
+  getPendingPayouts() {
+    return this.aggregationsService.getPendingPayouts();
+  }
 }

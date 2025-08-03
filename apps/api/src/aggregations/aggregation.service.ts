@@ -44,4 +44,24 @@ export class AggregationsService {
 
     return aggregation;
   }
+
+  getPendingPayouts() {
+    const transactions = this.transactionsService.findByType('payout');
+
+    const payoutMap: Record<string, { amount: number; count: number }> = {};
+
+    for (const transaction of transactions) {
+      if (!payoutMap[transaction.userId]) {
+        payoutMap[transaction.userId] = { amount: 0, count: 0 };
+      }
+      payoutMap[transaction.userId].amount += transaction.amount;
+      payoutMap[transaction.userId].count += 1;
+    }
+
+    return Object.entries(payoutMap).map(([userId, data]) => ({
+      userId,
+      totalPayoutAmount: data.amount,
+      transactionCount: data.count,
+    }));
+  }
 }
