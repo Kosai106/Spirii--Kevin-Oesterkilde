@@ -1,120 +1,75 @@
-# Turborepo starter
+# Spirii - Backend Software Developer Challenge
 
-This is a community-maintained example. If you experience a problem, please submit a pull request with a fix. GitHub Issues will be closed.
+[Kevin Østerkilde](https://www.oesterkilde.dk/?utm_source=github&utm_medium=readme&utm_campaign=spirii) | [LinkedIn](https://linkedin.com/in/oesterkilde)
 
-## Using this example
+---
 
-Run the following command:
+## Preface
 
-```bash
-npx create-turbo@latest -e with-nestjs
-```
+I have never worked with Nestjs before, but I took a chance and gave it a shot. Because I only had 4 hours for this test, there's a lot of things I didn't have time to pick up and understand properly, such as middleware, validation, error handling and such.
 
-## What's inside?
+## Approach
 
-This Turborepo includes the following packages/apps:
+### Getting started
 
-### Apps and Packages
+I've used [PNPM](https://pnpm.io/) for this project but it should run fine using other package managers as well.
 
-    .
-    ├── apps
-    │   ├── api                       # NestJS app (https://nestjs.com).
-    │   └── web                       # Next.js app (https://nextjs.org).
-    └── packages
-        ├── @repo/api                 # Shared `NestJS` resources.
-        ├── @repo/eslint-config       # `eslint` configurations (includes `prettier`)
-        ├── @repo/jest-config         # `jest` configurations
-        ├── @repo/typescript-config   # `tsconfig.json`s used throughout the monorepo
-        └── @repo/ui                  # Shareable stub React component library.
+The project runs on `localhost:3000` by default.
 
-Each package and application are 100% [TypeScript](https://www.typescriptlang.org/) safe.
+```sh
+pnpm i
 
-### Utilities
-
-This `Turborepo` has some additional tools already set for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type-safety
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-- [Jest](https://prettier.io) & [Playwright](https://playwright.dev/) for testing
-
-### Commands
-
-This `Turborepo` already configured useful commands for all your apps and packages.
-
-#### Build
-
-```bash
-# Will build all the app & packages with the supported `build` script.
-pnpm run build
-
-# ℹ️ If you plan to only build apps individually,
-# Please make sure you've built the packages first.
-```
-
-#### Develop
-
-```bash
-# Will run the development server for all the app & packages with the supported `dev` script.
+# Commands
 pnpm run dev
-```
-
-#### test
-
-```bash
-# Will launch a test suites for all the app & packages with the supported `test` script.
 pnpm run test
-
-# You can launch e2e testes with `test:e2e`
-pnpm run test:e2e
-
-# See `@repo/jest-config` to customize the behavior.
+pnpm run type-check
+pnpm run lint # Configured incorrectly and I din't have time to resolve it
 ```
 
-#### Lint
+### Project Structure
 
-```bash
-# Will lint all the app & packages with the supported `lint` script.
-# See `@repo/eslint-config` to customize the behavior.
-pnpm run lint
-```
+I bootstrapped the project using [Turborepo](https://turborepo.com/) using their [Nestjs example](https://github.com/vercel/turborepo/tree/main/examples/with-nestjs), which explains a few of the initial commits + a few of mine where I delete some boilerplate.
 
-#### Format
+#### APPS
 
-```bash
-# Will format all the supported `.ts,.js,json,.tsx,.jsx` files.
-# See `@repo/eslint-config/prettier-base.js` to customize the behavior.
-pnpm format
-```
+In `/apps/api` you will find the Nestjs project with the following endpoints
 
-### Remote Caching
+| Resource         | Endpoint                                                |
+| :--------------- | :------------------------------------------------------ |
+| **Transactions** | `/transactions`                                         |
+|                  | `/transactions?startDate=2023-01-01&endDate=2023-02-31` |
+|                  | `/transactions?limit=10&page=2`                         |
+| **Aggregations** | `/aggregations`                                         |
+|                  | `/aggregations/user/:userId`                            |
+|                  | `/aggregations/payouts/pending`                         |
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
+I would've created a [Postman](https://www.postman.com/) collection or [Swagger](https://swagger.io/) docs if I had more time.
 
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
+#### PACKAGES
 
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
+Under the `/packages/*` you'll see some boilerplate packages for ESLint, Jest and TypeScript configs. There's also a directory called `api` which contains some shared code for the API service.
 
-```bash
-npx turbo login
-```
+I forgot to utilize this package fully but there's some base entity and DTO types here.
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
+### Development + Code
 
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+Since I hadn't worked with Nestjs before, I took a moment to familiarize myself with the docs and the boilerplate code. Due to the time constrains, I didn't get far in the documentation (I will read up on this after the 4 hours) hence why you don't see me handle things like middleware, logging, error handling and so forth properly.
 
-```bash
-npx turbo link
-```
+I started off basing my code off of the initial boilerplate and then work on it from there. I only used AI once in this project, just to generate some more dummy data variants: `/apps/api/src/transactions/transactions.mock.ts` to give me some more data to experiment with.
 
-## Useful Links
+### Testing
 
-Learn more about the power of Turborepo:
+The tests I have are quite straight forward, nothing amazing, and my controllers and services practically do the same thing, so the tests here are almost identical. Other than that, I tried to make sure to test the "happy paths" as well as some error cases.
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+The tests themselves could be structured better but for the sake of the assignment, simple approaches are more manageable.
+
+## Final words
+
+Overall, a fun exercise. I've been meaning to give Nestjs and other JS frameworks a try and I think I'll give it a more serious try on a side project when I get some time.
+
+I look forward to discussing my approach with you soon.
+
+Thanks,
+
+Kevin Østerkilde
+[www.oesterkilde.dk](https://www.oesterkilde.dk/?utm_source=github&utm_medium=readme&utm_campaign=spirii)
