@@ -1,16 +1,14 @@
-import { Link } from 'links/entities/link.entity';
+import { CreateTransactionDto } from 'transactions/dto/create-transaction.dto';
+import { UpdateTransactionDto } from 'transactions/dto/update-transaction.dto';
 
-import { CreateLinkDto } from 'links/dto/create-link.dto';
-import { UpdateLinkDto } from 'links/dto/update-link.dto';
 import { Transaction } from 'transactions/entities/transaction.entity';
 
-export const links = {
+export const transactions = {
   dto: {
-    CreateLinkDto,
-    UpdateLinkDto,
+    CreateTransactionDto,
+    UpdateTransactionDto,
   },
   entities: {
-    Link,
     Transaction,
   },
 };
