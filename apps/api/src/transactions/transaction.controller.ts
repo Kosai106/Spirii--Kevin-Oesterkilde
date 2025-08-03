@@ -15,7 +15,7 @@ import { UpdateTransactionDto } from '@repo/api/transactions/dto/update-transact
 
 @Controller('transactions')
 export class TransactionsController {
-  constructor(private readonly transactionService: TransactionsService) {}
+  constructor(private readonly transactionsService: TransactionsService) {}
 
   @Get()
   findAll(
@@ -24,17 +24,17 @@ export class TransactionsController {
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string,
   ) {
-    return this.transactionService.findAll(page, limit, startDate, endDate);
+    return this.transactionsService.findAll(page, limit, startDate, endDate);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.transactionService.findOne(id);
+    return this.transactionsService.findOne(id);
   }
 
   @Post()
   create(@Body() createTransactionDto: CreateTransactionDto) {
-    return this.transactionService.create(createTransactionDto);
+    return this.transactionsService.create(createTransactionDto);
   }
 
   @Patch(':id')
@@ -42,11 +42,11 @@ export class TransactionsController {
     @Param('id') id: string,
     @Body() updateTransactionDto: UpdateTransactionDto,
   ) {
-    return this.transactionService.update(id, updateTransactionDto);
+    return this.transactionsService.update(id, updateTransactionDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.transactionService.remove(id);
+    return this.transactionsService.remove(id);
   }
 }

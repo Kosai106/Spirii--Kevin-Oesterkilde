@@ -7,15 +7,41 @@ import { mockData } from './transactions.mock';
 
 import { CreateTransactionDto } from '@repo/api/transactions/dto/create-transaction.dto';
 import { UpdateTransactionDto } from '@repo/api/transactions/dto/update-transaction.dto';
+import { RateLimiter } from './transaction.interface';
 
 // TODO: A lot of these actions should be internally wrapped in try/catch blocks
 //       I haven't done so here because we're not interfacing with an actual database
 
 @Injectable()
-export class TransactionsService {
+export class TransactionsService implements RateLimiter {
   private readonly _transactions: Transaction[] = mockData;
+  private readonly RATE_LIMIT = 5; // 5 requests per minute
+  private readonly RATE_WINDOW = 60_000; // 1 minute in ms
+  private readonly BATCH_SIZE = 1_000;
+  private requestCount = 0;
+  private requestWindowStart = Date.now();
+
+  // TODO: The rate limiting should be handled through middleware, but I am not familiar
+  //       enough wih Nestjs to have figured that out yet, nor do I have enough time
+  canMakeRequest() {
+    const now = Date.now();
+    if (now - this.requestWindowStart > this.RATE_WINDOW) {
+      this.requestCount = 0;
+      this.requestWindowStart = now;
+    }
+
+    return this.requestCount < this.RATE_LIMIT;
+  }
+
+  recordRequest() {
+    this.requestCount++;
+  }
 
   create(createTransactionDto: CreateTransactionDto) {
+    if (!this.canMakeRequest()) {
+      throw new Error('Rate limit exceeded');
+    }
+
     const newTransaction = {
       ...createTransactionDto,
       createdAt: new Date().toISOString(),
@@ -30,7 +56,11 @@ export class TransactionsService {
   // Everything is typed as strings here because of how query params work
   // They could technically also be arrays but let's not worry about that now
   findAll(page?: string, limit?: string, startDate?: string, endDate?: string) {
-    const itemsPerPage = parseInt(limit ?? '10', 10);
+    if (!this.canMakeRequest()) {
+      throw new Error('Rate limit exceeded');
+    }
+
+    const itemsPerPage = parseInt(limit ?? String(this.BATCH_SIZE), 10);
     const currentPage = parseInt(page ?? '1', 10);
     let filteredTransactions = this._transactions;
 
@@ -71,6 +101,10 @@ export class TransactionsService {
   }
 
   findOne(id: string) {
+    if (!this.canMakeRequest()) {
+      throw new Error('Rate limit exceeded');
+    }
+
     const found = this._transactions.find(({ id: _id }) => _id === id);
 
     if (!found) {
@@ -81,6 +115,10 @@ export class TransactionsService {
   }
 
   update(id: string, updateTransactionDto: UpdateTransactionDto) {
+    if (!this.canMakeRequest()) {
+      throw new Error('Rate limit exceeded');
+    }
+
     const index = this._transactions.findIndex(({ id: _id }) => _id === id);
 
     if (index === -1) {
@@ -99,9 +137,12 @@ export class TransactionsService {
   }
 
   remove(id: string) {
+    if (!this.canMakeRequest()) {
+      throw new Error('Rate limit exceeded');
+    }
+
     const index = this._transactions.findIndex(({ id: _id }) => _id === id);
 
-    console.log(id, index);
     if (index === -1) {
       throw new Error('No transaction found');
     }

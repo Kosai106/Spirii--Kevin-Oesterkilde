@@ -47,9 +47,58 @@ describe('TransactionController', () => {
         ]),
         meta: {
           totalItems: 53,
+          itemCount: 53,
+          itemsPerPage: 1_000,
+          totalPages: 1,
+          currentPage: 1,
+        },
+      });
+    });
+
+    it('should handle limit query', () => {
+      expect(transactionController.findAll(undefined, '10')).toEqual({
+        items: expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(String),
+            userId: '074092',
+            createdAt: expect.any(String),
+            type: expect.any(String),
+            amount: expect.any(Number),
+          }),
+        ]),
+        meta: {
+          totalItems: 53,
           itemCount: 10,
           itemsPerPage: 10,
           totalPages: 6,
+          currentPage: 1,
+        },
+      });
+    });
+
+    it('should handle startDate and endDate query', () => {
+      expect(
+        transactionController.findAll(
+          undefined,
+          undefined,
+          '2023-01-01',
+          '2023-02-31',
+        ),
+      ).toEqual({
+        items: expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(String),
+            userId: '074092',
+            createdAt: expect.any(String),
+            type: expect.any(String),
+            amount: expect.any(Number),
+          }),
+        ]),
+        meta: {
+          totalItems: 5,
+          itemCount: 5,
+          itemsPerPage: 1_000,
+          totalPages: 1,
           currentPage: 1,
         },
       });
