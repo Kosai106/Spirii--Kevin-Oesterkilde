@@ -9,10 +9,10 @@ import { TransactionsService } from '../transactions/transaction.service';
 export class AggregationsService {
   constructor(private readonly transactionsService: TransactionsService) {}
 
-  getUserAggregation(userId: string) {
+  getUserAggregation(userId: string): UserAggregationDto {
     const transactions = this.transactionsService.findByUserId(userId);
 
-    const aggregation = {
+    const aggregation: UserAggregationDto = {
       userId,
       balance: 0,
       earned: 0,
@@ -45,7 +45,7 @@ export class AggregationsService {
     return aggregation;
   }
 
-  getPendingPayouts() {
+  getPendingPayouts(): PayoutAggregationDto[] {
     const transactions = this.transactionsService.findByType('payout');
 
     const payoutMap: Record<string, { amount: number; count: number }> = {};
