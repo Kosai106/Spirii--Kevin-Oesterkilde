@@ -7,7 +7,11 @@ import { mockData } from './transactions.mock';
 
 import { CreateTransactionDto } from '@repo/api/transactions/dto/create-transaction.dto';
 import { UpdateTransactionDto } from '@repo/api/transactions/dto/update-transaction.dto';
-import { RateLimiter } from './transaction.interface';
+
+type RateLimiter = {
+  canMakeRequest(): boolean;
+  recordRequest(): void;
+};
 
 // TODO: A lot of these actions should be internally wrapped in try/catch blocks
 //       I haven't done so here because we're not interfacing with an actual database
@@ -40,6 +44,8 @@ export class TransactionsService implements RateLimiter {
   create(createTransactionDto: CreateTransactionDto) {
     if (!this.canMakeRequest()) {
       throw new Error('Rate limit exceeded');
+    } else {
+      this.recordRequest();
     }
 
     const newTransaction = {
@@ -58,6 +64,8 @@ export class TransactionsService implements RateLimiter {
   findAll(page?: string, limit?: string, startDate?: string, endDate?: string) {
     if (!this.canMakeRequest()) {
       throw new Error('Rate limit exceeded');
+    } else {
+      this.recordRequest();
     }
 
     const itemsPerPage = parseInt(limit ?? String(this.BATCH_SIZE), 10);
@@ -103,6 +111,8 @@ export class TransactionsService implements RateLimiter {
   findOne(id: string) {
     if (!this.canMakeRequest()) {
       throw new Error('Rate limit exceeded');
+    } else {
+      this.recordRequest();
     }
 
     const found = this._transactions.find(({ id: _id }) => _id === id);
@@ -114,9 +124,33 @@ export class TransactionsService implements RateLimiter {
     return found;
   }
 
+  findByUserId(userId: string) {
+    if (!this.canMakeRequest()) {
+      throw new Error('Rate limit exceeded');
+    } else {
+      this.recordRequest();
+    }
+
+    return this._transactions.filter(
+      ({ userId: _userId }) => _userId === userId,
+    );
+  }
+
+  findByType(type: 'payout' | 'spent' | 'earned') {
+    if (!this.canMakeRequest()) {
+      throw new Error('Rate limit exceeded');
+    } else {
+      this.recordRequest();
+    }
+
+    return this._transactions.filter(({ type: _type }) => _type === type);
+  }
+
   update(id: string, updateTransactionDto: UpdateTransactionDto) {
     if (!this.canMakeRequest()) {
       throw new Error('Rate limit exceeded');
+    } else {
+      this.recordRequest();
     }
 
     const index = this._transactions.findIndex(({ id: _id }) => _id === id);
@@ -139,6 +173,8 @@ export class TransactionsService implements RateLimiter {
   remove(id: string) {
     if (!this.canMakeRequest()) {
       throw new Error('Rate limit exceeded');
+    } else {
+      this.recordRequest();
     }
 
     const index = this._transactions.findIndex(({ id: _id }) => _id === id);
