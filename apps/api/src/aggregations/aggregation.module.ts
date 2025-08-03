@@ -9,5 +9,6 @@ import { TransactionsModule } from '../transactions/transaction.module';
   imports: [TransactionsModule],
   controllers: [AggregationsController],
   providers: [AggregationsService],
+  exports: [AggregationsService],
 })
 export class AggregationsModule {}

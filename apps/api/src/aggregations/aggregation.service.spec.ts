@@ -4,16 +4,16 @@ import {
   it,
   expect,
   beforeEach,
-  jest,
   beforeAll,
   afterAll,
+  jest,
 } from '@jest/globals';
-import { AggregationsController } from './aggregation.controller';
+
 import { AggregationsService } from './aggregation.service';
 import { TransactionsService } from '../transactions/transaction.service';
 
-describe('AggregationController', () => {
-  let aggregationsController: AggregationsController;
+describe('AggregationsService', () => {
+  let service: AggregationsService;
 
   beforeAll(() => {
     jest.useFakeTimers({ now: new Date('2025-08-03T12:47:00.000Z') });
@@ -24,19 +24,20 @@ describe('AggregationController', () => {
   });
 
   beforeEach(async () => {
-    const app: TestingModule = await Test.createTestingModule({
-      controllers: [AggregationsController],
+    const module: TestingModule = await Test.createTestingModule({
       providers: [AggregationsService, TransactionsService],
     }).compile();
 
-    aggregationsController = app.get<AggregationsController>(
-      AggregationsController,
-    );
+    service = module.get<AggregationsService>(AggregationsService);
+  });
+
+  it('should be defined', () => {
+    expect(service).toBeDefined();
   });
 
   describe('getUserAggregation', () => {
     it('should aggregate balance for user ID', () => {
-      expect(aggregationsController.getUserAggregation('074092')).toEqual({
+      expect(service.getUserAggregation('074092')).toEqual({
         userId: '074092',
         balance: expect.any(Number),
         earned: expect.any(Number),
@@ -48,15 +49,13 @@ describe('AggregationController', () => {
     });
   });
 
-  describe('getPendingPayouts', () => {
-    it('should aggregate pending payouts by user ID', () => {
-      expect(aggregationsController.getPendingPayouts()).toEqual([
-        {
-          totalPayoutAmount: 879.1700000000001,
-          transactionCount: 17,
-          userId: '074092',
-        },
-      ]);
-    });
+  it('should aggregate pending payouts by user ID', () => {
+    expect(service.getPendingPayouts()).toEqual([
+      {
+        totalPayoutAmount: 879.1700000000001,
+        transactionCount: 17,
+        userId: '074092',
+      },
+    ]);
   });
 });
