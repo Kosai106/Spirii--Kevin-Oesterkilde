@@ -32,7 +32,9 @@ I bootstrapped the project using [Turborepo](https://turborepo.com/) using their
 
 #### APPS
 
-In `/apps/api` you will find the Nestjs project with the following endpoints
+- `/apps/transaction` Microservice which handles transactions
+- `/apps/aggregation` Microservice which handles aggregations
+- `/apps/api` API gateway which exposes the following endpoints:
 
 | Resource         | Endpoint                                                |
 | :--------------- | :------------------------------------------------------ |

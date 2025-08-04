@@ -44,8 +44,8 @@ export class TransactionsController {
   }
 
   @MessagePattern({ cmd: 'create_transaction' })
-  create(@Payload() createTransactionDto: CreateTransactionDto) {
-    return this.transactionsService.create(createTransactionDto);
+  create(@Payload() data: { createTransactionDto: CreateTransactionDto }) {
+    return this.transactionsService.create(data.createTransactionDto);
   }
 
   @MessagePattern({ cmd: 'update_transaction' })
