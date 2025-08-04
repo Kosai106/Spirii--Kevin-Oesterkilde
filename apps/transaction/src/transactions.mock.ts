@@ -1,375 +1,43 @@
+import { v4 as uuidv4 } from 'uuid';
+
 import { Transaction } from '@repo/api/transactions';
-1;
-export const mockData: Transaction[] = [
-  {
-    id: '41bbdf81-735c-4aea-beb3-3e5f433a30c5',
-    userId: '074092',
-    createdAt: '2023-03-16T12:33:11.000Z',
-    type: 'payout',
-    amount: 30,
-  },
-  {
-    id: '41bbdf81-735c-4aea-beb3-3e5fasfsdfef',
-    userId: '074092',
-    createdAt: '2023-03-12T12:33:11.000Z',
-    type: 'spent',
-    amount: 12,
-  },
-  {
-    id: '41bbdf81-735c-4aea-beb3-342jhj234nj234',
-    userId: '074092',
-    createdAt: '2023-03-15T12:33:11.000Z',
-    type: 'earned',
-    amount: 1.2,
-  },
-  {
-    id: '3f729a5f-30c5-4ea0-b039-862f15e52ff7',
-    userId: '074092',
-    createdAt: '2023-03-11T20:04:00.000Z',
-    type: 'earned',
-    amount: 2.07,
-  },
-  {
-    id: 'ba7739c8-e87f-4cb2-9ee2-7ae32f22aed0',
-    userId: '074092',
-    createdAt: '2023-03-14T15:24:00.000Z',
-    type: 'payout',
-    amount: 86.03,
-  },
-  {
-    id: 'b1287238-b61b-40e9-9155-ba655776c3aa',
-    userId: '074092',
-    createdAt: '2023-03-17T13:42:00.000Z',
-    type: 'spent',
-    amount: 73.39,
-  },
-  {
-    id: 'a9e8fe28-f931-4fd9-ac9e-a2ad24498d86',
-    userId: '074092',
-    createdAt: '2023-03-01T00:55:00.000Z',
-    type: 'payout',
-    amount: 18.45,
-  },
-  {
-    id: 'c4356c1f-37df-4753-adb2-35f66c604a30',
-    userId: '074092',
-    createdAt: '2023-03-18T00:13:00.000Z',
-    type: 'earned',
-    amount: 98.61,
-  },
-  {
-    id: '98325a80-533e-4a8a-bc25-9874c79ae5d5',
-    userId: '074092',
-    createdAt: '2023-03-06T01:19:00.000Z',
-    type: 'payout',
-    amount: 80.98,
-  },
-  {
-    id: '236ef181-9054-4a98-aa70-38470d8b5737',
-    userId: '074092',
-    createdAt: '2023-03-21T05:18:00.000Z',
-    type: 'spent',
-    amount: 28.97,
-  },
-  {
-    id: 'a7def3ad-7ab9-4f4b-8e92-5c0c91763abe',
-    userId: '074092',
-    createdAt: '2023-03-02T13:24:00.000Z',
-    type: 'earned',
-    amount: 9.46,
-  },
-  {
-    id: '4af1ff78-1303-4b84-858a-93929a05f3e2',
-    userId: '074092',
-    createdAt: '2023-03-28T03:52:00.000Z',
-    type: 'earned',
-    amount: 64.7,
-  },
-  {
-    id: 'fec2d3b6-f68f-42af-adab-d48ecb4ce81e',
-    userId: '074092',
-    createdAt: '2023-03-27T02:26:00.000Z',
-    type: 'spent',
-    amount: 73.83,
-  },
-  {
-    id: '6e0cb23d-a2e2-4d2a-878d-e53960925fa8',
-    userId: '074092',
-    createdAt: '2023-03-17T10:07:00.000Z',
-    type: 'earned',
-    amount: 35.25,
-  },
-  {
-    id: '93823216-9dd7-40bf-94d3-a470b354d9e8',
-    userId: '074092',
-    createdAt: '2023-03-11T05:43:00.000Z',
-    type: 'payout',
-    amount: 71.67,
-  },
-  {
-    id: 'b3a6f0b5-cdda-41ee-ad61-ce3f8e7216c2',
-    userId: '074092',
-    createdAt: '2023-03-12T21:21:00.000Z',
-    type: 'payout',
-    amount: 40.94,
-  },
-  {
-    id: '6e479e0b-84e5-49f5-a74f-fe76bae1260d',
-    userId: '074092',
-    createdAt: '2023-03-11T19:06:00.000Z',
-    type: 'spent',
-    amount: 60.78,
-  },
-  {
-    id: '450ed37f-e74e-4244-b19a-694fb53b7736',
-    userId: '074092',
-    createdAt: '2023-03-01T17:45:00.000Z',
-    type: 'earned',
-    amount: 23.4,
-  },
-  {
-    id: 'df7988d9-c8a4-40c6-a6aa-c8e9af751871',
-    userId: '074092',
-    createdAt: '2023-03-17T09:02:00.000Z',
-    type: 'earned',
-    amount: 65.77,
-  },
-  {
-    id: 'a3ed635c-2f00-4f40-947d-8f6c4bdf2d92',
-    userId: '074092',
-    createdAt: '2023-03-24T14:49:00.000Z',
-    type: 'spent',
-    amount: 42.6,
-  },
-  {
-    id: 'eb15e615-a42d-4022-afcd-0b93d373162b',
-    userId: '074092',
-    createdAt: '2023-03-06T00:53:00.000Z',
-    type: 'earned',
-    amount: 56.39,
-  },
-  {
-    id: 'dc4491ad-fb18-44a3-8f17-090a1f1b2a5d',
-    userId: '074092',
-    createdAt: '2023-03-13T18:21:00.000Z',
-    type: 'earned',
-    amount: 10.24,
-  },
-  {
-    id: '5ae0d2ee-8b60-4fcb-ad97-eddb3d7dc745',
-    userId: '074092',
-    createdAt: '2023-03-06T01:15:00.000Z',
-    type: 'earned',
-    amount: 26.28,
-  },
-  {
-    id: 'e2a56638-4c94-4eb8-8e93-a05684ee2eef',
-    userId: '074092',
-    createdAt: '2023-03-01T14:58:00.000Z',
-    type: 'spent',
-    amount: 53.99,
-  },
-  {
-    id: '8665d11d-b39f-457e-8923-e72dc0b11524',
-    userId: '074092',
-    createdAt: '2023-03-29T03:02:00.000Z',
-    type: 'spent',
-    amount: 17.18,
-  },
-  {
-    id: '6dc3741e-cfd0-4cde-932a-35c4fb0b295e',
-    userId: '074092',
-    createdAt: '2023-03-14T12:20:00.000Z',
-    type: 'payout',
-    amount: 67.04,
-  },
-  {
-    id: 'c2d40c69-5ffc-4869-befe-ea761b28d07b',
-    userId: '074092',
-    createdAt: '2023-03-10T09:20:00.000Z',
-    type: 'earned',
-    amount: 11.3,
-  },
-  {
-    id: '22aa85ae-7a93-4b19-a813-c92cabf021b3',
-    userId: '074092',
-    createdAt: '2023-03-06T14:55:00.000Z',
-    type: 'spent',
-    amount: 20.88,
-  },
-  {
-    id: 'd5b633df-5cee-4175-bd14-a3dff43315f1',
-    userId: '074092',
-    createdAt: '2023-03-15T02:27:00.000Z',
-    type: 'earned',
-    amount: 45.75,
-  },
-  {
-    id: '0664c63f-65d4-4156-a78d-a32a5716e331',
-    userId: '074092',
-    createdAt: '2023-03-16T17:17:00.000Z',
-    type: 'earned',
-    amount: 33.79,
-  },
-  {
-    id: 'de8be75b-ba85-492b-9115-24348d1e3bbd',
-    userId: '074092',
-    createdAt: '2023-03-01T09:51:00.000Z',
-    type: 'payout',
-    amount: 11.44,
-  },
-  {
-    id: '5659c84a-0bfb-4141-b200-070c4f87719e',
-    userId: '074092',
-    createdAt: '2023-03-25T23:06:00.000Z',
-    type: 'spent',
-    amount: 89.19,
-  },
-  {
-    id: 'f060ac8f-9415-4c29-b14e-4b8d5f44ab40',
-    userId: '074092',
-    createdAt: '2023-03-04T16:43:00.000Z',
-    type: 'payout',
-    amount: 96.39,
-  },
-  {
-    id: 'eb867381-c9fd-4f58-a22b-163a85d22fb2',
-    userId: '074092',
-    createdAt: '2023-03-22T23:15:00.000Z',
-    type: 'payout',
-    amount: 92.07,
-  },
-  {
-    id: '687973c2-e810-4cc9-ad35-5ce23ce73401',
-    userId: '074092',
-    createdAt: '2023-03-30T05:04:00.000Z',
-    type: 'spent',
-    amount: 21.76,
-  },
-  {
-    id: '5f69d1ce-036b-4ff9-842f-a1206bc44af6',
-    userId: '074092',
-    createdAt: '2023-03-25T11:48:00.000Z',
-    type: 'earned',
-    amount: 4.81,
-  },
-  {
-    id: '85abdde7-c88f-4c70-8009-7bf258156903',
-    userId: '074092',
-    createdAt: '2023-03-11T21:40:00.000Z',
-    type: 'earned',
-    amount: 7.61,
-  },
-  {
-    id: '3bbf467a-571b-4191-a4ba-37ccba3a6175',
-    userId: '074092',
-    createdAt: '2023-03-14T13:12:00.000Z',
-    type: 'earned',
-    amount: 86.87,
-  },
-  {
-    id: '277e1956-abdc-43f9-93ed-bbb397d8f1db',
-    userId: '074092',
-    createdAt: '2023-03-28T01:06:00.000Z',
-    type: 'spent',
-    amount: 75.51,
-  },
-  {
-    id: '0700144e-0677-4ec4-b7e2-ba005ab516c1',
-    userId: '074092',
-    createdAt: '2023-03-20T05:46:00.000Z',
-    type: 'earned',
-    amount: 12.08,
-  },
-  {
-    id: 'aa3715f9-0c97-4b93-8cba-9f4d2641f256',
-    userId: '074092',
-    createdAt: '2023-03-27T10:40:00.000Z',
-    type: 'spent',
-    amount: 29.18,
-  },
-  {
-    id: '3ef0e06b-ca21-4c26-ab75-7d752694bdd4',
-    userId: '074092',
-    createdAt: '2023-03-05T09:47:00.000Z',
-    type: 'payout',
-    amount: 24.44,
-  },
-  {
-    id: '5ce6a19b-de1e-4fa9-9897-35704a2cd072',
-    userId: '074092',
-    createdAt: '2023-03-07T09:22:00.000Z',
-    type: 'payout',
-    amount: 19.62,
-  },
-  {
-    id: '05030683-cc65-4633-a4a4-07192aca77f2',
-    userId: '074092',
-    createdAt: '2023-03-15T13:56:00.000Z',
-    type: 'earned',
-    amount: 96.64,
-  },
-  {
-    id: '921f31c1-7a56-41bd-9f51-bde72d9b93f3',
-    userId: '074092',
-    createdAt: '2023-03-27T23:22:00.000Z',
-    type: 'payout',
-    amount: 9.19,
-  },
-  {
-    id: 'cdeb2d09-1d16-4086-9417-3c143cee8422',
-    userId: '074092',
-    createdAt: '2023-03-10T22:10:00.000Z',
-    type: 'spent',
-    amount: 65.04,
-  },
-  {
-    id: 'e2551b0e-2adf-499e-9b5f-10b8334e8073',
-    userId: '074092',
-    createdAt: '2023-03-18T15:04:00.000Z',
-    type: 'earned',
-    amount: 62.43,
-  },
-  {
-    id: '76b73d0b-1cfa-4593-869d-75b29b068af7',
-    userId: '074092',
-    createdAt: '2023-03-04T05:01:00.000Z',
-    type: 'spent',
-    amount: 64.1,
-  },
-  {
-    id: '31ac3c51-f904-442c-a3b0-1eb264b8d0e5',
-    userId: '074092',
-    createdAt: '2023-03-09T10:52:00.000Z',
-    type: 'payout',
-    amount: 72.25,
-  },
-  {
-    id: '4ef5bebc-6066-4c93-8b08-600fdebea7fc',
-    userId: '074092',
-    createdAt: '2023-03-03T06:33:00.000Z',
-    type: 'payout',
-    amount: 17.92,
-  },
-  {
-    id: '4d2cafba-581a-4574-a68f-01111940671a',
-    userId: '074092',
-    createdAt: '2023-03-25T19:46:00.000Z',
-    type: 'payout',
-    amount: 51.8,
-  },
-  {
-    id: '50667292-014d-4b8b-9373-97aaa4368b5d',
-    userId: '074092',
-    createdAt: '2023-03-03T05:44:00.000Z',
-    type: 'payout',
-    amount: 88.94,
-  },
-  {
-    id: '5bedc679-96ae-4700-b94a-77ca33efb35e',
-    userId: '074092',
-    createdAt: '2023-03-09T17:09:00.000Z',
-    type: 'earned',
-    amount: 16.03,
-  },
-];
+
+const generateMockData = (
+  numberOfTransactions: number,
+  numberOfUsers: number,
+) => {
+  const users: string[] = Array.from({ length: numberOfUsers }, () =>
+    Math.floor(100000 + Math.random() * 900000).toString(),
+  );
+
+  const transactionTypes: Transaction['type'][] = ['payout', 'spent', 'earned'];
+  const mockData: Transaction[] = [];
+
+  for (let i = 0; i < numberOfTransactions; i++) {
+    const userId = users[Math.floor(Math.random() * users.length)];
+    const type =
+      transactionTypes[Math.floor(Math.random() * transactionTypes.length)];
+
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setFullYear(endDate.getFullYear() - 1);
+    const randomDate = new Date(
+      startDate.getTime() +
+        Math.random() * (endDate.getTime() - startDate.getTime()),
+    );
+
+    const transaction: Transaction = {
+      id: uuidv4(),
+      userId: userId,
+      createdAt: randomDate.toISOString(),
+      type: type,
+      amount: parseFloat((Math.random() * 99 + 1).toFixed(2)),
+    };
+
+    mockData.push(transaction);
+  }
+
+  return mockData;
+};
+
+export const mockData = generateMockData(5000, 5);

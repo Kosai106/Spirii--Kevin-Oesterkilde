@@ -8,9 +8,9 @@ export const paginate = <T>(
   items: T[],
   options: PaginationOptions = {},
 ): PaginatedResult<T> => {
-  const { page = '1', limit, defaultLimit = 1000 } = options;
+  const { page = '1', limit = 1_000 } = options;
 
-  const itemsPerPage = parseInt(String(limit ?? defaultLimit), 10);
+  const itemsPerPage = parseInt(String(limit), 10);
   const currentPage = parseInt(String(page), 10);
 
   const startIndex = (currentPage - 1) * itemsPerPage;

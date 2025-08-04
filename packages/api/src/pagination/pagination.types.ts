@@ -1,7 +1,6 @@
 export type PaginationOptions = {
   page?: string | number;
   limit?: string | number;
-  defaultLimit?: number;
 };
 
 export type PaginationMeta = {

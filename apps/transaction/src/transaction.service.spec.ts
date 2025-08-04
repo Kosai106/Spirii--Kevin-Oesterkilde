@@ -119,46 +119,6 @@ describe('TransactionsService', () => {
     });
   });
 
-  describe('findByUserId', () => {
-    it('should find by user ID', () => {
-      expect(service.findByUserId('074092')).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            id: expect.any(String),
-            userId: '074092',
-            createdAt: expect.any(String),
-            type: expect.any(String),
-            amount: expect.any(Number),
-          }),
-        ]),
-      );
-    });
-
-    it('should handle no match', () => {
-      expect(service.findByUserId('does-not-exist')).toEqual([]);
-    });
-  });
-
-  describe('findByType', () => {
-    it('should find by user ID', () => {
-      expect(service.findByType('earned')).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            id: expect.any(String),
-            userId: '074092',
-            createdAt: expect.any(String),
-            type: expect.any(String),
-            amount: expect.any(Number),
-          }),
-        ]),
-      );
-    });
-
-    it('should handle no match', () => {
-      expect(service.findByUserId('does-not-exist')).toEqual([]);
-    });
-  });
-
   describe('create', () => {
     it('should create a transaction', () => {
       expect(

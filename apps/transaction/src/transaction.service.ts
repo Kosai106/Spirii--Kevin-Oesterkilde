@@ -16,7 +16,7 @@ import { mockData } from './transactions.mock';
 @Injectable()
 export class TransactionsService {
   private readonly _transactions: Transaction[] = mockData;
-  private readonly BATCH_SIZE = 1_000;
+  private readonly BATCH_SIZE = process.env.BATCH_SIZE ?? 1_000;
 
   create(createTransactionDto: CreateTransactionDto) {
     const newTransaction = {
@@ -32,7 +32,7 @@ export class TransactionsService {
 
   // Everything is typed as strings here because of how query params work
   // They could technically also be arrays but let's not worry about that now
-  findAll(page?: string, limit?: string, startDate?: string, endDate?: string) {
+  findAll(page?: string, startDate?: string, endDate?: string) {
     let filteredTransactions = this._transactions;
 
     if (startDate || endDate) {
@@ -57,8 +57,7 @@ export class TransactionsService {
 
     return paginate(filteredTransactions, {
       page,
-      limit,
-      defaultLimit: this.BATCH_SIZE,
+      limit: this.BATCH_SIZE,
     });
   }
 
@@ -70,16 +69,6 @@ export class TransactionsService {
     }
 
     return found;
-  }
-
-  findByUserId(userId: string) {
-    return this._transactions.filter(
-      ({ userId: _userId }) => _userId === userId,
-    );
-  }
-
-  findByType(type: 'payout' | 'spent' | 'earned') {
-    return this._transactions.filter(({ type: _type }) => _type === type);
   }
 
   update(id: string, updateTransactionDto: UpdateTransactionDto) {

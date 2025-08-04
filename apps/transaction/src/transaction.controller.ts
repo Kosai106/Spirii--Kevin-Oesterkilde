@@ -17,14 +17,12 @@ export class TransactionsController {
     @Payload()
     data: {
       page?: string;
-      limit?: string;
       startDate?: string;
       endDate?: string;
     } = {},
   ) {
     return this.transactionsService.findAll(
       data.page,
-      data.limit,
       data.startDate,
       data.endDate,
     );
@@ -33,16 +31,6 @@ export class TransactionsController {
   @MessagePattern({ cmd: 'get_transaction' })
   findOne(@Payload() data: { id: string }) {
     return this.transactionsService.findOne(data.id);
-  }
-
-  @MessagePattern({ cmd: 'get_transactions_by_user' })
-  findByUserId(@Payload() data: { userId: string }) {
-    return this.transactionsService.findByUserId(data.userId);
-  }
-
-  @MessagePattern({ cmd: 'get_transactions_by_type' })
-  findByType(@Payload() data: { type: 'payout' | 'spent' | 'earned' }) {
-    return this.transactionsService.findByType(data.type);
   }
 
   @MessagePattern({ cmd: 'create_transaction' })
