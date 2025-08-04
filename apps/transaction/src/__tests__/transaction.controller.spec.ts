@@ -4,15 +4,16 @@ import {
   it,
   expect,
   beforeEach,
+  jest,
   beforeAll,
   afterAll,
-  jest,
 } from '@jest/globals';
 
-import { TransactionsService } from './transaction.service';
+import { TransactionsController } from '../transaction.controller';
+import { TransactionsService } from '../transaction.service';
 
-describe('TransactionsService', () => {
-  let service: TransactionsService;
+describe('TransactionController', () => {
+  let transactionsController: TransactionsController;
 
   beforeAll(() => {
     jest.useFakeTimers({ now: new Date('2025-08-03T12:47:00.000Z') });
@@ -23,20 +24,19 @@ describe('TransactionsService', () => {
   });
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const app: TestingModule = await Test.createTestingModule({
+      controllers: [TransactionsController],
       providers: [TransactionsService],
     }).compile();
 
-    service = module.get<TransactionsService>(TransactionsService);
-  });
-
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+    transactionsController = app.get<TransactionsController>(
+      TransactionsController,
+    );
   });
 
   describe('findAll', () => {
     it('should find all transactions', () => {
-      expect(service.findAll()).toEqual({
+      expect(transactionsController.findAll({})).toEqual({
         items: expect.arrayContaining([
           expect.objectContaining({
             id: expect.any(String),
@@ -57,7 +57,10 @@ describe('TransactionsService', () => {
     });
 
     it('should handle startDate and endDate query', () => {
-      const result = service.findAll(undefined, '2025-01-01', '2025-12-31');
+      const result = transactionsController.findAll({
+        startDate: '2025-01-01',
+        endDate: '2025-12-31',
+      });
       expect(result.items).toBeDefined();
       expect(result.meta).toBeDefined();
       expect(result.meta.totalItems).toBeGreaterThanOrEqual(0);
@@ -67,27 +70,34 @@ describe('TransactionsService', () => {
 
   describe('findOne', () => {
     it('should find a transaction by ID', () => {
+      const service = new TransactionsService();
       // @ts-expect-error - Access internal data is forbidden but this is just a test and I don't have time to do it better
       const firstTransaction = service._transactions[0];
       const transactionId = firstTransaction.id;
 
-      expect(service.findOne(transactionId)).toEqual(firstTransaction);
+      expect(
+        transactionsController.findOne({
+          id: transactionId,
+        }),
+      ).toEqual(firstTransaction);
     });
 
     it('should handle no match found', () => {
-      expect(() => service.findOne('does-not-exist')).toThrowError(
-        'No transaction found',
-      );
+      expect(() =>
+        transactionsController.findOne({ id: 'does-not-exist' }),
+      ).toThrowError('No transaction found');
     });
   });
 
   describe('create', () => {
     it('should create a transaction', () => {
       expect(
-        service.create({
-          userId: '074092',
-          type: 'earned',
-          amount: 10,
+        transactionsController.create({
+          createTransactionDto: {
+            userId: '074092',
+            type: 'earned',
+            amount: 10,
+          },
         }),
       ).toEqual(
         expect.objectContaining({
@@ -99,20 +109,24 @@ describe('TransactionsService', () => {
         }),
       );
 
-      expect(service.findAll().meta.totalItems).toEqual(15001);
+      expect(transactionsController.findAll({}).meta.totalItems).toEqual(15001);
     });
   });
 
   describe('update', () => {
     it('should update an existing transaction', () => {
+      const service = new TransactionsService();
       // @ts-expect-error - Access internal data is forbidden but this is just a test and I don't have time to do it better
       const firstTransaction = service._transactions[0];
       const transactionId = firstTransaction.id;
 
       expect(
-        service.update(transactionId, {
-          amount: 42,
-          type: 'spent',
+        transactionsController.update({
+          id: transactionId,
+          updateTransactionDto: {
+            amount: 42,
+            type: 'spent',
+          },
         }),
       ).toEqual(
         expect.objectContaining({
@@ -128,9 +142,12 @@ describe('TransactionsService', () => {
 
     it('should handle no transaction match', () => {
       expect(() =>
-        service.update('does-not-exist', {
-          amount: 42,
-          type: 'spent',
+        transactionsController.update({
+          id: 'does-not-exist',
+          updateTransactionDto: {
+            amount: 42,
+            type: 'spent',
+          },
         }),
       ).toThrowError('No transaction found');
     });
@@ -138,25 +155,28 @@ describe('TransactionsService', () => {
 
   describe('remove', () => {
     it('should remove a transaction', () => {
+      const service = new TransactionsService();
       // @ts-expect-error - Access internal data is forbidden but this is just a test and I don't have time to do it better
       const firstTransaction = service._transactions[0];
       const transactionId = firstTransaction.id;
-      const initialCount = service.findAll().meta.totalItems;
+      const initialCount = transactionsController.findAll({}).meta.totalItems;
 
-      expect(service.remove(transactionId)).toEqual(
+      expect(transactionsController.remove({ id: transactionId })).toEqual(
         'Successfully removed transaction',
       );
 
-      expect(service.findAll().meta.totalItems).toEqual(initialCount - 1);
-      expect(() => service.findOne(transactionId)).toThrowError(
-        'No transaction found',
+      expect(transactionsController.findAll({}).meta.totalItems).toEqual(
+        initialCount - 1,
       );
+      expect(() =>
+        transactionsController.findOne({ id: transactionId }),
+      ).toThrowError('No transaction found');
     });
 
     it('should handle no transaction match', () => {
-      expect(() => service.remove('does-not-exist')).toThrowError(
-        'No transaction found',
-      );
+      expect(() =>
+        transactionsController.remove({ id: 'does-not-exist' }),
+      ).toThrowError('No transaction found');
     });
   });
 });

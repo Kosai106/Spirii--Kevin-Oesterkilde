@@ -11,7 +11,7 @@ const generateMockData = (numberOfTransactions: number, userIds: string[]) => {
   for (let i = 0; i < numberOfTransactions; i++) {
     const userId = userIds[Math.floor(Math.random() * userIds.length)];
 
-    // Weighted type selection: 50% earned, 25% payout, 25% spent
+    // Weighted type selection: 90% earned, 5% payout, 5% spent
     const random = Math.random();
     let type: (typeof transactionTypes)[number];
     if (random < 0.9) {
@@ -44,4 +44,7 @@ const generateMockData = (numberOfTransactions: number, userIds: string[]) => {
   return mockData;
 };
 
-export const mockData = generateMockData(15_000, USER_IDS);
+export const mockData = generateMockData(
+  parseInt(process.env.BATCH_SIZE ?? '1000', 10) * 15,
+  USER_IDS,
+);

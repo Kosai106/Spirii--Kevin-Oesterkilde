@@ -8,8 +8,9 @@ import {
   beforeAll,
   afterAll,
 } from '@jest/globals';
-import { AggregationsController } from './aggregation.controller';
-import { AggregationsService } from './aggregation.service';
+
+import { AggregationsController } from '../aggregation.controller';
+import { AggregationsService } from '../aggregation.service';
 
 describe('AggregationController', () => {
   let aggregationsController: AggregationsController;

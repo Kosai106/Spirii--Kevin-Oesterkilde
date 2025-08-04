@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { ClientProxy } from '@nestjs/microservices';
 import {
   describe,
   it,
@@ -8,10 +9,9 @@ import {
   afterAll,
   jest,
 } from '@jest/globals';
-
-import { AggregationsService } from './aggregation.service';
-import { ClientProxy } from '@nestjs/microservices';
 import { of } from 'rxjs';
+
+import { AggregationsService } from '../aggregation.service';
 
 describe('AggregationsService', () => {
   let service: AggregationsService;
