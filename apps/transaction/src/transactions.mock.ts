@@ -1,4 +1,4 @@
-import { Transaction } from '@repo/api/transactions/entities/transaction.entity';
+import { Transaction } from '@repo/api/transactions';
 1;
 export const mockData: Transaction[] = [
   {

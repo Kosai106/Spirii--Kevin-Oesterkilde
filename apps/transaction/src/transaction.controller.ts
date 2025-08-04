@@ -1,8 +1,10 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 
-import { CreateTransactionDto } from '@repo/api/transactions/dto/create-transaction.dto';
-import { UpdateTransactionDto } from '@repo/api/transactions/dto/update-transaction.dto';
+import {
+  CreateTransactionDto,
+  UpdateTransactionDto,
+} from '@repo/api/transactions';
 
 import { TransactionsService } from './transaction.service';
 

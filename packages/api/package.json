@@ -19,6 +19,15 @@
   },
   "typesVersions": {
     "*": {
+      "aggregations": [
+        "src/aggregations/index"
+      ],
+      "transactions": [
+        "src/transactions/index"
+      ],
+      "pagination": [
+        "src/pagination/index"
+      ],
       "*": [
         "src/*"
       ]
@@ -29,9 +38,21 @@
       "import": "./dist/index.js",
       "require": "./dist/index.js"
     },
+    "./transactions": {
+      "import": "./dist/transactions/index.js",
+      "require": "./dist/transactions/index.js"
+    },
+    "./aggregations": {
+      "import": "./dist/aggregations/index.js",
+      "require": "./dist/aggregations/index.js"
+    },
+    "./pagination": {
+      "import": "./dist/pagination/index.js",
+      "require": "./dist/pagination/index.js"
+    },
     "./*": {
-      "import": "./dist/*.js",
-      "require": "./dist/*.js"
+      "import": "./dist/*/index.js",
+      "require": "./dist/*/index.js"
     }
   },
   "dependencies": {

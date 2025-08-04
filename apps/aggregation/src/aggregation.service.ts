@@ -2,8 +2,10 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
-import { UserAggregationDto } from '@repo/api/aggregations/dto/user-aggregation.dto';
-import { PayoutAggregationDto } from '@repo/api/aggregations/dto/payout-aggregation.dto';
+import {
+  UserAggregationDto,
+  PayoutAggregationDto,
+} from '@repo/api/aggregations';
 
 @Injectable()
 export class AggregationsService {

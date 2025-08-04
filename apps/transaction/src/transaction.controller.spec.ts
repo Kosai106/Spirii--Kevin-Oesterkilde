@@ -168,9 +168,11 @@ describe('TransactionController', () => {
     it('should create a transaction', () => {
       expect(
         transactionsController.create({
-          userId: '074092',
-          type: 'earned',
-          amount: 10,
+          createTransactionDto: {
+            userId: '074092',
+            type: 'earned',
+            amount: 10,
+          },
         }),
       ).toEqual(
         expect.objectContaining({

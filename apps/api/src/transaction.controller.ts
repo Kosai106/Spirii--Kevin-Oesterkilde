@@ -11,8 +11,10 @@ import {
 } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 
-import { CreateTransactionDto } from '@repo/api/transactions/dto/create-transaction.dto';
-import { UpdateTransactionDto } from '@repo/api/transactions/dto/update-transaction.dto';
+import {
+  CreateTransactionDto,
+  UpdateTransactionDto,
+} from '@repo/api/transactions';
 
 @Controller('transactions')
 export class TransactionController {

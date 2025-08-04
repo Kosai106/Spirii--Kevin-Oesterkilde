@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 
-import { CreateTransactionDto } from '@repo/api/transactions/dto/create-transaction.dto';
-import { UpdateTransactionDto } from '@repo/api/transactions/dto/update-transaction.dto';
-import { Transaction } from '@repo/api/transactions/entities/transaction.entity';
+import {
+  Transaction,
+  CreateTransactionDto,
+  UpdateTransactionDto,
+} from '@repo/api/transactions';
+import { paginate } from '@repo/api/pagination';
 
 import { mockData } from './transactions.mock';
 
@@ -30,8 +33,6 @@ export class TransactionsService {
   // Everything is typed as strings here because of how query params work
   // They could technically also be arrays but let's not worry about that now
   findAll(page?: string, limit?: string, startDate?: string, endDate?: string) {
-    const itemsPerPage = parseInt(limit ?? String(this.BATCH_SIZE), 10);
-    const currentPage = parseInt(page ?? '1', 10);
     let filteredTransactions = this._transactions;
 
     if (startDate || endDate) {
@@ -54,20 +55,11 @@ export class TransactionsService {
       });
     }
 
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const paginatedItems = filteredTransactions.slice(startIndex, endIndex);
-
-    return {
-      items: paginatedItems,
-      meta: {
-        totalItems: filteredTransactions.length,
-        itemCount: paginatedItems.length,
-        itemsPerPage,
-        totalPages: Math.ceil(filteredTransactions.length / itemsPerPage),
-        currentPage: currentPage,
-      },
-    };
+    return paginate(filteredTransactions, {
+      page,
+      limit,
+      defaultLimit: this.BATCH_SIZE,
+    });
   }
 
   findOne(id: string) {
