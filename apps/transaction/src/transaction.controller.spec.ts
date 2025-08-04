@@ -4,16 +4,16 @@ import {
   it,
   expect,
   beforeEach,
+  jest,
   beforeAll,
   afterAll,
-  jest,
 } from '@jest/globals';
 
+import { TransactionsController } from './transaction.controller';
 import { TransactionsService } from './transaction.service';
-import { AggregationsService } from '../aggregations/aggregation.service';
 
-describe('TransactionsService', () => {
-  let service: TransactionsService;
+describe('TransactionController', () => {
+  let transactionsController: TransactionsController;
 
   beforeAll(() => {
     jest.useFakeTimers({ now: new Date('2025-08-03T12:47:00.000Z') });
@@ -24,20 +24,19 @@ describe('TransactionsService', () => {
   });
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [TransactionsService, AggregationsService],
+    const app: TestingModule = await Test.createTestingModule({
+      controllers: [TransactionsController],
+      providers: [TransactionsService],
     }).compile();
 
-    service = module.get<TransactionsService>(TransactionsService);
-  });
-
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+    transactionsController = app.get<TransactionsController>(
+      TransactionsController,
+    );
   });
 
   describe('findAll', () => {
     it('should find all transactions', () => {
-      expect(service.findAll()).toEqual({
+      expect(transactionsController.findAll()).toEqual({
         items: expect.arrayContaining([
           expect.objectContaining({
             id: expect.any(String),
@@ -58,7 +57,7 @@ describe('TransactionsService', () => {
     });
 
     it('should handle limit query', () => {
-      expect(service.findAll(undefined, '10')).toEqual({
+      expect(transactionsController.findAll(undefined, '10')).toEqual({
         items: expect.arrayContaining([
           expect.objectContaining({
             id: expect.any(String),
@@ -80,7 +79,12 @@ describe('TransactionsService', () => {
 
     it('should handle startDate and endDate query', () => {
       expect(
-        service.findAll(undefined, undefined, '2023-01-01', '2023-02-31'),
+        transactionsController.findAll(
+          undefined,
+          undefined,
+          '2023-01-01',
+          '2023-02-31',
+        ),
       ).toEqual({
         items: expect.arrayContaining([
           expect.objectContaining({
@@ -104,7 +108,9 @@ describe('TransactionsService', () => {
 
   describe('findOne', () => {
     it('should find a transaction by ID', () => {
-      expect(service.findOne('41bbdf81-735c-4aea-beb3-3e5fasfsdfef')).toEqual({
+      expect(
+        transactionsController.findOne('41bbdf81-735c-4aea-beb3-3e5fasfsdfef'),
+      ).toEqual({
         id: '41bbdf81-735c-4aea-beb3-3e5fasfsdfef',
         userId: '074092',
         createdAt: '2023-03-12T12:33:11.000Z',
@@ -114,15 +120,15 @@ describe('TransactionsService', () => {
     });
 
     it('should handle no match found', () => {
-      expect(() => service.findOne('does-not-exist')).toThrowError(
-        'No transaction found',
-      );
+      expect(() =>
+        transactionsController.findOne('does-not-exist'),
+      ).toThrowError('No transaction found');
     });
   });
 
   describe('findByUserId', () => {
     it('should find by user ID', () => {
-      expect(service.findByUserId('074092')).toEqual(
+      expect(transactionsController.findByUserId('074092')).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
             id: expect.any(String),
@@ -136,13 +142,13 @@ describe('TransactionsService', () => {
     });
 
     it('should handle no match', () => {
-      expect(service.findByUserId('does-not-exist')).toEqual([]);
+      expect(transactionsController.findByUserId('does-not-exist')).toEqual([]);
     });
   });
 
   describe('findByType', () => {
     it('should find by user ID', () => {
-      expect(service.findByType('earned')).toEqual(
+      expect(transactionsController.findByType('earned')).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
             id: expect.any(String),
@@ -156,14 +162,14 @@ describe('TransactionsService', () => {
     });
 
     it('should handle no match', () => {
-      expect(service.findByUserId('does-not-exist')).toEqual([]);
+      expect(transactionsController.findByUserId('does-not-exist')).toEqual([]);
     });
   });
 
   describe('create', () => {
     it('should create a transaction', () => {
       expect(
-        service.create({
+        transactionsController.create({
           userId: '074092',
           type: 'earned',
           amount: 10,
@@ -178,14 +184,14 @@ describe('TransactionsService', () => {
         }),
       );
 
-      expect(service.findAll().meta.totalItems).toEqual(54);
+      expect(transactionsController.findAll().meta.totalItems).toEqual(54);
     });
   });
 
   describe('update', () => {
     it('should update an existing transaction', () => {
       expect(
-        service.update('41bbdf81-735c-4aea-beb3-3e5fasfsdfef', {
+        transactionsController.update('41bbdf81-735c-4aea-beb3-3e5fasfsdfef', {
           amount: 42,
           type: 'spent',
         }),
@@ -203,7 +209,7 @@ describe('TransactionsService', () => {
 
     it('should handle no transaction match', () => {
       expect(() =>
-        service.update('does-not-exist', {
+        transactionsController.update('does-not-exist', {
           amount: 42,
           type: 'spent',
         }),
@@ -214,22 +220,22 @@ describe('TransactionsService', () => {
   describe('remove', () => {
     it('should remove a transaction', () => {
       const transactionId = '41bbdf81-735c-4aea-beb3-3e5fasfsdfef';
-      expect(service.findAll().meta.totalItems).toEqual(54);
+      expect(transactionsController.findAll().meta.totalItems).toEqual(54);
 
-      expect(service.remove(transactionId)).toEqual(
+      expect(transactionsController.remove(transactionId)).toEqual(
         'Successfully removed transaction',
       );
 
-      expect(service.findAll().meta.totalItems).toEqual(53);
-      expect(() => service.findOne(transactionId)).toThrowError(
+      expect(transactionsController.findAll().meta.totalItems).toEqual(53);
+      expect(() => transactionsController.findOne(transactionId)).toThrowError(
         'No transaction found',
       );
     });
 
     it('should handle no transaction match', () => {
-      expect(() => service.remove('does-not-exist')).toThrowError(
-        'No transaction found',
-      );
+      expect(() =>
+        transactionsController.remove('does-not-exist'),
+      ).toThrowError('No transaction found');
     });
   });
 });

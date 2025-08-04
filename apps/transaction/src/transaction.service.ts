@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 
+import { CreateTransactionDto } from '@repo/api/transactions/dto/create-transaction.dto';
+import { UpdateTransactionDto } from '@repo/api/transactions/dto/update-transaction.dto';
 import { Transaction } from '@repo/api/transactions/entities/transaction.entity';
 
 import { mockData } from './transactions.mock';
-
-import { CreateTransactionDto } from '@repo/api/transactions/dto/create-transaction.dto';
-import { UpdateTransactionDto } from '@repo/api/transactions/dto/update-transaction.dto';
 
 // TODO: A lot of these actions should be internally wrapped in try/catch blocks
 //       I haven't done so here because we're not interfacing with an actual database

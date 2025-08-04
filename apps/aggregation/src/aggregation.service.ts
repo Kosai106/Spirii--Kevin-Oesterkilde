@@ -1,16 +1,26 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
 
 import { UserAggregationDto } from '@repo/api/aggregations/dto/user-aggregation.dto';
 import { PayoutAggregationDto } from '@repo/api/aggregations/dto/payout-aggregation.dto';
 
-import { TransactionsService } from '../transactions/transaction.service';
-
 @Injectable()
 export class AggregationsService {
-  constructor(private readonly transactionsService: TransactionsService) {}
+  constructor(
+    @Inject('TRANSACTION_SERVICE')
+    private readonly transactionsClient: ClientProxy,
+  ) {}
 
-  getUserAggregation(userId: string): UserAggregationDto {
-    const transactions = this.transactionsService.findByUserId(userId);
+  async getUserAggregation(userId: string): Promise<UserAggregationDto> {
+    const pattern = { cmd: 'get_transactions_by_user' };
+    const payload = {
+      userId,
+    };
+
+    const transactions = await firstValueFrom(
+      this.transactionsClient.send(pattern, payload),
+    );
 
     const aggregation: UserAggregationDto = {
       userId,
@@ -45,8 +55,15 @@ export class AggregationsService {
     return aggregation;
   }
 
-  getPendingPayouts(): PayoutAggregationDto[] {
-    const transactions = this.transactionsService.findByType('payout');
+  async getPendingPayouts(): Promise<PayoutAggregationDto[]> {
+    const pattern = { cmd: 'get_transactions_by_type' };
+    const payload = {
+      type: 'payout',
+    };
+
+    const transactions = await firstValueFrom(
+      this.transactionsClient.send(pattern, payload),
+    );
 
     const payoutMap: Record<string, { amount: number; count: number }> = {};
 

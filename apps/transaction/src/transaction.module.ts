@@ -1,13 +1,13 @@
-import { Module, MiddlewareConsumer, NestModule } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+
+import { RateLimitMiddleware } from './middleware/rate-limit.middleware';
 
 import { TransactionsService } from './transaction.service';
 import { TransactionsController } from './transaction.controller';
-import { RateLimitMiddleware } from './rate-limit.middleware';
 
 @Module({
   controllers: [TransactionsController],
   providers: [TransactionsService],
-  exports: [TransactionsService],
 })
 export class TransactionsModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
