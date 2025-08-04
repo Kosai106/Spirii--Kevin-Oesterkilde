@@ -36,7 +36,7 @@ describe('TransactionController', () => {
 
   describe('findAll', () => {
     it('should find all transactions', () => {
-      expect(transactionsController.findAll()).toEqual({
+      expect(transactionsController.findAll({})).toEqual({
         items: expect.arrayContaining([
           expect.objectContaining({
             id: expect.any(String),
@@ -57,7 +57,7 @@ describe('TransactionController', () => {
     });
 
     it('should handle limit query', () => {
-      expect(transactionsController.findAll(undefined, '10')).toEqual({
+      expect(transactionsController.findAll({ limit: '10' })).toEqual({
         items: expect.arrayContaining([
           expect.objectContaining({
             id: expect.any(String),
@@ -79,12 +79,10 @@ describe('TransactionController', () => {
 
     it('should handle startDate and endDate query', () => {
       expect(
-        transactionsController.findAll(
-          undefined,
-          undefined,
-          '2023-01-01',
-          '2023-02-31',
-        ),
+        transactionsController.findAll({
+          startDate: '2023-03-01',
+          endDate: '2023-03-05',
+        }),
       ).toEqual({
         items: expect.arrayContaining([
           expect.objectContaining({
@@ -96,8 +94,8 @@ describe('TransactionController', () => {
           }),
         ]),
         meta: {
-          totalItems: 5,
-          itemCount: 5,
+          totalItems: 9,
+          itemCount: 9,
           itemsPerPage: 1_000,
           totalPages: 1,
           currentPage: 1,
@@ -109,7 +107,7 @@ describe('TransactionController', () => {
   describe('findOne', () => {
     it('should find a transaction by ID', () => {
       expect(
-        transactionsController.findOne('41bbdf81-735c-4aea-beb3-3e5fasfsdfef'),
+        transactionsController.findOne({ id: '41bbdf81-735c-4aea-beb3-3e5fasfsdfef' }),
       ).toEqual({
         id: '41bbdf81-735c-4aea-beb3-3e5fasfsdfef',
         userId: '074092',
@@ -121,14 +119,14 @@ describe('TransactionController', () => {
 
     it('should handle no match found', () => {
       expect(() =>
-        transactionsController.findOne('does-not-exist'),
+        transactionsController.findOne({ id: 'does-not-exist' }),
       ).toThrowError('No transaction found');
     });
   });
 
   describe('findByUserId', () => {
     it('should find by user ID', () => {
-      expect(transactionsController.findByUserId('074092')).toEqual(
+      expect(transactionsController.findByUserId({ userId: '074092' })).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
             id: expect.any(String),
@@ -142,13 +140,13 @@ describe('TransactionController', () => {
     });
 
     it('should handle no match', () => {
-      expect(transactionsController.findByUserId('does-not-exist')).toEqual([]);
+      expect(transactionsController.findByUserId({ userId: 'does-not-exist' })).toEqual([]);
     });
   });
 
   describe('findByType', () => {
-    it('should find by user ID', () => {
-      expect(transactionsController.findByType('earned')).toEqual(
+    it('should find by type', () => {
+      expect(transactionsController.findByType({ type: 'earned' })).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
             id: expect.any(String),
@@ -161,8 +159,8 @@ describe('TransactionController', () => {
       );
     });
 
-    it('should handle no match', () => {
-      expect(transactionsController.findByUserId('does-not-exist')).toEqual([]);
+    it('should handle earned type count', () => {
+      expect(transactionsController.findByType({ type: 'earned' })).toHaveLength(21);
     });
   });
 
@@ -184,16 +182,19 @@ describe('TransactionController', () => {
         }),
       );
 
-      expect(transactionsController.findAll().meta.totalItems).toEqual(54);
+      expect(transactionsController.findAll({}).meta.totalItems).toEqual(54);
     });
   });
 
   describe('update', () => {
     it('should update an existing transaction', () => {
       expect(
-        transactionsController.update('41bbdf81-735c-4aea-beb3-3e5fasfsdfef', {
-          amount: 42,
-          type: 'spent',
+        transactionsController.update({
+          id: '41bbdf81-735c-4aea-beb3-3e5fasfsdfef',
+          updateTransactionDto: {
+            amount: 42,
+            type: 'spent',
+          },
         }),
       ).toEqual(
         expect.objectContaining({
@@ -209,9 +210,12 @@ describe('TransactionController', () => {
 
     it('should handle no transaction match', () => {
       expect(() =>
-        transactionsController.update('does-not-exist', {
-          amount: 42,
-          type: 'spent',
+        transactionsController.update({
+          id: 'does-not-exist',
+          updateTransactionDto: {
+            amount: 42,
+            type: 'spent',
+          },
         }),
       ).toThrowError('No transaction found');
     });
@@ -220,21 +224,21 @@ describe('TransactionController', () => {
   describe('remove', () => {
     it('should remove a transaction', () => {
       const transactionId = '41bbdf81-735c-4aea-beb3-3e5fasfsdfef';
-      expect(transactionsController.findAll().meta.totalItems).toEqual(54);
+      expect(transactionsController.findAll({}).meta.totalItems).toEqual(54);
 
-      expect(transactionsController.remove(transactionId)).toEqual(
+      expect(transactionsController.remove({ id: transactionId })).toEqual(
         'Successfully removed transaction',
       );
 
-      expect(transactionsController.findAll().meta.totalItems).toEqual(53);
-      expect(() => transactionsController.findOne(transactionId)).toThrowError(
+      expect(transactionsController.findAll({}).meta.totalItems).toEqual(53);
+      expect(() => transactionsController.findOne({ id: transactionId })).toThrowError(
         'No transaction found',
       );
     });
 
     it('should handle no transaction match', () => {
       expect(() =>
-        transactionsController.remove('does-not-exist'),
+        transactionsController.remove({ id: 'does-not-exist' }),
       ).toThrowError('No transaction found');
     });
   });

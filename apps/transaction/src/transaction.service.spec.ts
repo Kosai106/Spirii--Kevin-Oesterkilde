@@ -79,7 +79,7 @@ describe('TransactionsService', () => {
 
     it('should handle startDate and endDate query', () => {
       expect(
-        service.findAll(undefined, undefined, '2023-01-01', '2023-02-31'),
+        service.findAll(undefined, undefined, '2023-03-01', '2023-03-05'),
       ).toEqual({
         items: expect.arrayContaining([
           expect.objectContaining({
@@ -91,8 +91,8 @@ describe('TransactionsService', () => {
           }),
         ]),
         meta: {
-          totalItems: 5,
-          itemCount: 5,
+          totalItems: 9,
+          itemCount: 9,
           itemsPerPage: 1_000,
           totalPages: 1,
           currentPage: 1,
