@@ -6,6 +6,8 @@ import {
   UserAggregationDto,
   PayoutAggregationDto,
 } from '@repo/api/aggregations';
+import type { Transaction } from '@repo/api/transactions';
+import type { PaginatedResult } from '@repo/api/pagination';
 
 @Injectable()
 export class AggregationsService {
@@ -15,14 +17,31 @@ export class AggregationsService {
   ) {}
 
   async getUserAggregation(userId: string): Promise<UserAggregationDto> {
-    const pattern = { cmd: 'get_transactions_by_user' };
-    const payload = {
-      userId,
-    };
+    const allTransactions: Transaction[] = [];
+    let currentPage = 1;
+    let hasMorePages = true;
 
-    const transactions = await firstValueFrom(
-      this.transactionsClient.send(pattern, payload),
-    );
+    while (hasMorePages) {
+      const pattern = { cmd: 'get_transactions' };
+      const payload = {
+        page: String(currentPage),
+      };
+
+      const response: PaginatedResult<Transaction> = await firstValueFrom(
+        this.transactionsClient.send(pattern, payload),
+      );
+
+      const transactions = response.items ?? [];
+      allTransactions.push(
+        ...transactions.filter((transaction) => transaction.userId === userId),
+      );
+
+      if (response.meta && currentPage >= response.meta.totalPages) {
+        hasMorePages = false;
+      } else {
+        currentPage++;
+      }
+    }
 
     const aggregation: UserAggregationDto = {
       userId,
@@ -30,11 +49,10 @@ export class AggregationsService {
       earned: 0,
       spent: 0,
       payoutRequested: 0,
-      paidOut: 0,
       lastUpdatedAt: new Date().toISOString(),
     };
 
-    for (const transaction of transactions) {
+    for (const transaction of allTransactions) {
       switch (transaction.type) {
         case 'earned': {
           aggregation.earned += transaction.amount;
@@ -58,18 +76,35 @@ export class AggregationsService {
   }
 
   async getPendingPayouts(): Promise<PayoutAggregationDto[]> {
-    const pattern = { cmd: 'get_transactions_by_type' };
-    const payload = {
-      type: 'payout',
-    };
+    const allTransactions = [];
+    let currentPage = 1;
+    let hasMorePages = true;
 
-    const transactions = await firstValueFrom(
-      this.transactionsClient.send(pattern, payload),
-    );
+    while (hasMorePages) {
+      const pattern = { cmd: 'get_transactions' };
+      const payload = {
+        page: String(currentPage),
+      };
+
+      const response: PaginatedResult<Transaction> = await firstValueFrom(
+        this.transactionsClient.send(pattern, payload),
+      );
+
+      const transactions = response.items || [];
+      allTransactions.push(
+        ...transactions.filter((transaction) => transaction.type === 'payout'),
+      );
+
+      if (response.meta && currentPage >= response.meta.totalPages) {
+        hasMorePages = false;
+      } else {
+        currentPage++;
+      }
+    }
 
     const payoutMap: Record<string, { amount: number; count: number }> = {};
 
-    for (const transaction of transactions) {
+    for (const transaction of allTransactions) {
       if (!payoutMap[transaction.userId]) {
         payoutMap[transaction.userId] = { amount: 0, count: 0 };
       }

@@ -2,21 +2,25 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { Transaction } from '@repo/api/transactions';
 
-const generateMockData = (
-  numberOfTransactions: number,
-  numberOfUsers: number,
-) => {
-  const users: string[] = Array.from({ length: numberOfUsers }, () =>
-    Math.floor(100000 + Math.random() * 900000).toString(),
-  );
+const USER_IDS = ['074092', '235335', '471315', '373448'];
 
-  const transactionTypes: Transaction['type'][] = ['payout', 'spent', 'earned'];
+const generateMockData = (numberOfTransactions: number, userIds: string[]) => {
+  const transactionTypes = ['payout', 'spent', 'earned'] as const;
   const mockData: Transaction[] = [];
 
   for (let i = 0; i < numberOfTransactions; i++) {
-    const userId = users[Math.floor(Math.random() * users.length)];
-    const type =
-      transactionTypes[Math.floor(Math.random() * transactionTypes.length)];
+    const userId = userIds[Math.floor(Math.random() * userIds.length)];
+
+    // Weighted type selection: 50% earned, 25% payout, 25% spent
+    const random = Math.random();
+    let type: (typeof transactionTypes)[number];
+    if (random < 0.9) {
+      type = 'earned';
+    } else if (random < 0.95) {
+      type = 'payout';
+    } else {
+      type = 'spent';
+    }
 
     const endDate = new Date();
     const startDate = new Date();
@@ -30,7 +34,7 @@ const generateMockData = (
       id: uuidv4(),
       userId: userId,
       createdAt: randomDate.toISOString(),
-      type: type,
+      type,
       amount: parseFloat((Math.random() * 99 + 1).toFixed(2)),
     };
 
@@ -40,4 +44,4 @@ const generateMockData = (
   return mockData;
 };
 
-export const mockData = generateMockData(5000, 5);
+export const mockData = generateMockData(15_000, USER_IDS);

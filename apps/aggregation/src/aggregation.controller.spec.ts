@@ -57,10 +57,14 @@ describe('AggregationController', () => {
         lastUpdatedAt: '2025-08-03T12:47:00.000Z',
       };
 
-      jest.spyOn(aggregationsService, 'getUserAggregation').mockResolvedValue(mockAggregation);
+      jest
+        .spyOn(aggregationsService, 'getUserAggregation')
+        .mockResolvedValue(mockAggregation);
 
-      const result = await aggregationsController.getUserAggregation({ userId: '074092' });
-      
+      const result = await aggregationsController.getUserAggregation({
+        userId: '074092',
+      });
+
       expect(result).toEqual({
         userId: '074092',
         balance: 50,
@@ -75,16 +79,20 @@ describe('AggregationController', () => {
 
   describe('getPendingPayouts', () => {
     it('should aggregate pending payouts by user ID', async () => {
-      const mockPayouts = [{
-        totalPayoutAmount: 879.17,
-        transactionCount: 17,
-        userId: '074092',
-      }];
+      const mockPayouts = [
+        {
+          totalPayoutAmount: 879.17,
+          transactionCount: 17,
+          userId: '074092',
+        },
+      ];
 
-      jest.spyOn(aggregationsService, 'getPendingPayouts').mockResolvedValue(mockPayouts);
+      jest
+        .spyOn(aggregationsService, 'getPendingPayouts')
+        .mockResolvedValue(mockPayouts);
 
       const result = await aggregationsController.getPendingPayouts();
-      
+
       expect(result).toEqual([
         {
           totalPayoutAmount: 879.17,
