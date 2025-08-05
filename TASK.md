@@ -38,7 +38,7 @@ Whether you earn, spend, or request a payout, a new transaction is created in th
 
 ## Transaction API
  
-`GET /transactions?startDate=2023-02-01 00:00:00&amp;endDate=2023-02-01 00:00:00`
+`GET /transactions?startDate=2023-02-01T00:00:00&endDate=2023-02-01T00:00:00`
 Response:
 ```json
 {

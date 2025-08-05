@@ -8,11 +8,11 @@
     },
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "outputs": [".next/**", "!.next/cache/**"],
+      "env": ["BATCH_SIZE"]
     },
     "lint": {},
     "test": {},
-    "test:e2e": {},
     "type-check": {}
   }
 }

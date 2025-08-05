@@ -4,6 +4,5 @@ export class UserAggregationDto {
   earned: number;
   spent: number;
   payoutRequested: number;
-  paidOut: number;
   lastUpdatedAt: string; // Stringified date
 }
