@@ -5,6 +5,8 @@ import {
   Get,
   Inject,
   Param,
+  ParseIntPipe,
+  ParseUUIDPipe,
   Patch,
   Post,
   Query,
@@ -25,7 +27,7 @@ export class TransactionController {
 
   @Get()
   findAll(
-    @Query('page') page?: string,
+    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string,
   ) {
@@ -36,7 +38,7 @@ export class TransactionController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.transactionsClient.send({ cmd: 'get_transaction' }, { id });
   }
 
@@ -50,7 +52,7 @@ export class TransactionController {
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
     @Body() updateTransactionDto: UpdateTransactionDto,
   ) {
     return this.transactionsClient.send(
@@ -60,7 +62,7 @@ export class TransactionController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.transactionsClient.send({ cmd: 'remove_transaction' }, { id });
   }
 }

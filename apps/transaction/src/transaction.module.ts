@@ -1,6 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-
-import { RateLimitMiddleware } from './middleware/rate-limit.middleware';
+import { Module } from '@nestjs/common';
 
 import { TransactionsService } from './transaction.service';
 import { TransactionsController } from './transaction.controller';
@@ -9,8 +7,4 @@ import { TransactionsController } from './transaction.controller';
   controllers: [TransactionsController],
   providers: [TransactionsService],
 })
-export class TransactionsModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer.apply(RateLimitMiddleware).forRoutes(TransactionsController);
-  }
-}
+export class TransactionsModule {}

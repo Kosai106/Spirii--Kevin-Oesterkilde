@@ -1,6 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
-import { firstValueFrom } from 'rxjs';
+import { Injectable } from '@nestjs/common';
 
 import {
   UserAggregationDto,
@@ -11,10 +9,9 @@ import type { PaginatedResult } from '@repo/api/pagination';
 
 @Injectable()
 export class AggregationsService {
-  constructor(
-    @Inject('TRANSACTION_SERVICE')
-    private readonly transactionsClient: ClientProxy,
-  ) {}
+  private readonly apiGatewayUrl = 'http://localhost:3000';
+
+  constructor() {}
 
   async getUserAggregation(userId: string): Promise<UserAggregationDto> {
     const allTransactions: Transaction[] = [];
@@ -22,21 +19,23 @@ export class AggregationsService {
     let hasMorePages = true;
 
     while (hasMorePages) {
-      const pattern = { cmd: 'get_transactions' };
-      const payload = {
-        page: String(currentPage),
-      };
+      const url = `${this.apiGatewayUrl}/transactions?page=${currentPage}`;
+      const response = await fetch(url);
 
-      const response: PaginatedResult<Transaction> = await firstValueFrom(
-        this.transactionsClient.send(pattern, payload),
-      );
+      if (!response.ok) {
+        throw new Error(`Failed to fetch transactions: ${response.statusText}`);
+      }
 
-      const transactions = response.items ?? [];
+      const data: PaginatedResult<Transaction> = await response.json();
+
+      console.log({ currentPage });
+
+      const transactions = data.items ?? [];
       allTransactions.push(
         ...transactions.filter((transaction) => transaction.userId === userId),
       );
 
-      if (response.meta && currentPage >= response.meta.totalPages) {
+      if (data.meta && currentPage >= data.meta.totalPages) {
         hasMorePages = false;
       } else {
         currentPage++;
@@ -81,21 +80,21 @@ export class AggregationsService {
     let hasMorePages = true;
 
     while (hasMorePages) {
-      const pattern = { cmd: 'get_transactions' };
-      const payload = {
-        page: String(currentPage),
-      };
+      const url = `${this.apiGatewayUrl}/transactions?page=${currentPage}`;
+      const response = await fetch(url);
 
-      const response: PaginatedResult<Transaction> = await firstValueFrom(
-        this.transactionsClient.send(pattern, payload),
-      );
+      if (!response.ok) {
+        throw new Error(`Failed to fetch transactions: ${response.statusText}`);
+      }
 
-      const transactions = response.items || [];
+      const data: PaginatedResult<Transaction> = await response.json();
+
+      const transactions = data.items || [];
       allTransactions.push(
         ...transactions.filter((transaction) => transaction.type === 'payout'),
       );
 
-      if (response.meta && currentPage >= response.meta.totalPages) {
+      if (data.meta && currentPage >= data.meta.totalPages) {
         hasMorePages = false;
       } else {
         currentPage++;
